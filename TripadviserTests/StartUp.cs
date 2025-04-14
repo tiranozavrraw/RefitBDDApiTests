@@ -4,6 +4,9 @@ using Refit;
 using Reqnroll.Microsoft.Extensions.DependencyInjection;
 using TripadviserTests.TripAdvicerClient.Cruises;
 using Serilog;
+using Serilog.Exceptions;
+using Serilog.Exceptions.Core;
+using Serilog.Exceptions.Refit.Destructurers;
 using TripadviserTests.HttpHandlers;
 
 namespace TripadviserTests;
@@ -40,8 +43,10 @@ public static class StartUp
         serviceCollection.AddLogging(loggingBuilder =>
         {
             loggingBuilder.AddSerilog(new LoggerConfiguration()
-                .WriteTo.Console()
-                //.WriteTo.File("log.txt")
+                .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder()
+                    .WithDefaultDestructurers()
+                    .WithDestructurers([new ApiExceptionDestructurer()]))
+                .WriteTo.File("log.txt")
                 .CreateLogger());
         });
         

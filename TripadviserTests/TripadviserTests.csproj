@@ -29,6 +29,7 @@
         <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="2.4.0" />
         <PackageReference Include="Reqnroll.xUnit" Version="2.4.0" />
         <PackageReference Include="Serilog" Version="4.2.0" />
+        <PackageReference Include="Serilog.Exceptions.Refit" Version="8.4.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.1" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
