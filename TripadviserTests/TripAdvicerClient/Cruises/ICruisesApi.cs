@@ -10,4 +10,7 @@ public interface ICruisesApi
 
     [Get("/cruises/getLocation")]
     public Task<CruisesLocation> GetCruisesLocationAsync();
+    
+    [Get("/cruises/getLocation")]
+    public Task<T> GetCruisesLocationAsync<T>();
 }
