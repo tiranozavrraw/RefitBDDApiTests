@@ -1,13 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Refit;
+using Reqnroll.Microsoft.Extensions.DependencyInjection;
 using TripadviserTests.TripAdvicerClient.Cruises;
+using Serilog;
+using TripadviserTests.HttpHandlers;
 
 namespace TripadviserTests;
 
-public abstract class StartUp
+public static class StartUp
 {
-    public static ServiceProvider BuildServiceProvider()
+    [ScenarioDependencies]
+    private static IServiceCollection ServiceCollection()
     {
         IServiceCollection serviceCollection = new ServiceCollection();
         IConfiguration configuration = new ConfigurationBuilder()
@@ -17,6 +21,8 @@ public abstract class StartUp
             .AddEnvironmentVariables()
             .Build();
         serviceCollection.AddSingleton(configuration);
+        serviceCollection.AddTransient<AuthorizationHandler>(x => new AuthorizationHandler("test"));
+        serviceCollection.AddTransient<LoggingDelegatingHandler>();
 
         serviceCollection.AddRefitClient<ICruisesApi>()
             .ConfigureHttpClient(
@@ -26,14 +32,19 @@ public abstract class StartUp
                     var baseUrl = config["TripAdvisorRapidAPI:BaseUrl"]
                                   ?? throw new ArgumentNullException(nameof(IConfiguration));
                     httpClient.BaseAddress = new Uri(baseUrl);
-                });
-
-        //serviceCollection.AddHttpClient("TripAdvisorClient", client =>
-        //{
-        //    client.BaseAddress = new Uri(configuration["TripAdvisorRapidAPI:BaseUrl"]);
-        //});
-
-
-        return serviceCollection.BuildServiceProvider();
+                    httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", config["TripAdvisorRapidAPI:ApiHostHeader"]);
+                })
+            .AddHttpMessageHandler<AuthorizationHandler>()
+            .AddHttpMessageHandler<LoggingDelegatingHandler>();
+        
+        serviceCollection.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.AddSerilog(new LoggerConfiguration()
+                .WriteTo.Console()
+                //.WriteTo.File("log.txt")
+                .CreateLogger());
+        });
+        
+        return serviceCollection;
     }
 }
