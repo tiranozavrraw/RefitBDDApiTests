@@ -24,7 +24,7 @@ public static class StartUp
             .AddEnvironmentVariables()
             .Build();
         serviceCollection.AddSingleton(configuration);
-        serviceCollection.AddTransient<AuthorizationHandler>(x => new AuthorizationHandler("test"));
+        //serviceCollection.AddTransient<AuthorizationHandler>(x => new AuthorizationHandler("test"));
         serviceCollection.AddTransient<LoggingDelegatingHandler>();
 
         serviceCollection.AddRefitClient<ICruisesApi>()
@@ -35,10 +35,13 @@ public static class StartUp
                     var baseUrl = config["TripAdvisorRapidAPI:BaseUrl"]
                                   ?? throw new ArgumentNullException(nameof(IConfiguration));
                     httpClient.BaseAddress = new Uri(baseUrl);
-                    httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", config["TripAdvisorRapidAPI:ApiHostHeader"]);
-                })
-            .AddHttpMessageHandler<AuthorizationHandler>()
-            .AddHttpMessageHandler<LoggingDelegatingHandler>();
+                    httpClient.DefaultRequestHeaders.Add("x-rapidapi-host",
+                        config["TripAdvisorRapidAPI:ApiHostHeader"]);
+                    //httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", config["TripAdvisorRapidAPI:ApiKey"]);
+                });
+            //.AddHttpMessageHandler<AuthorizationHandler>()
+            //.AddHttpMessageHandler<LoggingDelegatingHandler>();
+            
         
         serviceCollection.AddLogging(loggingBuilder =>
         {
