@@ -45,11 +45,9 @@ public class CruisesStepDefinitions : BaseStepDefinition
         _scenarioContext.Add("Cruises", cruises);
     }
     
-    [Then(@"the result should contain cruises")]
+    [Then(@"the result should contain cruises with printed titles and sorted by number of crew")]
     public void ThenTheResultShouldContainCruises()
     {
-        //TODO: Redo this step
-        // Implement logic to verify that the result contains cruises
         var cruises = (SearchCruisesResponse) _scenarioContext["Cruises"];
         cruises.Data.List.ShouldNotBeEmpty();
 

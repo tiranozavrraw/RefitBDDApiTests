@@ -4,4 +4,4 @@
     
     Given Cruise with Destination Caribbean
     When Search for cruises with DestinationId and Order popularity
-    Then the result should contain cruises
+    Then the result should contain cruises with printed titles and sorted by number of crew

@@ -8,6 +8,7 @@ using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
 using Serilog.Exceptions.Refit.Destructurers;
 using TripadviserTests.HttpHandlers;
+// ReSharper disable UnusedMember.Local
 
 namespace TripadviserTests;
 
